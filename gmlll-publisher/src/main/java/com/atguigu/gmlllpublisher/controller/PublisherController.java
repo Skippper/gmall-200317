@@ -4,8 +4,10 @@ package com.atguigu.gmlllpublisher.controller;
 import com.atguigu.gmlllpublisher.serice.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,5 +44,29 @@ public class PublisherController {
             map2.put("name","新增用户");
             map2.put("value",233);
         return list.toString();
+    }
+
+    @RequestMapping("/realtime-hours")
+    public String getDauTotalHourMap(String id,String date){
+        Map<String,Map<String,Long>> resMap = new HashMap<>();
+        if ("dau".equals(id)){
+            //今天数据
+            Map today = publisherService.getDauTotalHourMap(date);
+            String yesdayDate = LocalDate.parse(date).plusDays(-1).toString();
+            Map yesday = publisherService.getDauTotalHourMap(yesdayDate);
+
+            Map<String, Long> yesterdayMap = resMap.get("yesterday");
+            Map<String, Long> todayMap = resMap.get("today");
+            if (yesterdayMap == null && todayMap == null){
+                todayMap = today;
+                yesterdayMap = yesday;
+                resMap.put("yesterday",yesterdayMap);
+                resMap.put("today",todayMap);
+            }
+
+        }else if ("new_mid".equals(id)){
+
+        }
+        return resMap.toString();
     }
 }
