@@ -11,5 +11,5 @@ import java.util.Map;
 public interface PublisherService {
 
     public Integer getDauTotalCount(String date);
-    public List<Map> getDauTotalHourMap(String date);
+    public Map getDauTotalHourMap(String date);
 }
