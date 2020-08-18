@@ -11,10 +11,11 @@ import java.util.Map;
  * @date 2020/08/17
  * @desc
  */
-@Mapper
+//@Mapper
 public interface DauMapper {
-    @Select("select count(*) from GMALL200317_DAU where  logdate=#{date}")
+//    @Select(" select count(*) from GMALL200317_DAU where  logdate=#{date}")
     public Integer getDauTotalCount(String date);
-    @Select("select LOGHOUR lh, count(*) ct from GMALL200317_DAU where  LOGDATE=#{date} group by LOGHOUR")
+    /*@Select("  select LOGHOUR lh, count(*) ct from GMALL200317_DAU where  LOGDATE=#{date}\n" +
+            "        group by LOGHOUR")*/
     public List<Map> getDauTotalHourMap(String date);
 }
