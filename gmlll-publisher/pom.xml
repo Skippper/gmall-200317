@@ -77,6 +77,13 @@
             <artifactId>hadoop-common</artifactId>
             <version>3.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -84,6 +91,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--热部署插件-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
