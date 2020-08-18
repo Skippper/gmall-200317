@@ -24,49 +24,65 @@ public class PublisherController {
     @Autowired
     private PublisherService publisherService;
 
+
     @GetMapping("/realtime-total")
-    public String getDauTotal(String date){
+    public String getDauTotal(String date) {
 
         Integer totalCount = publisherService.getDauTotalCount(date);   //日活总数
+
+        Double amount = publisherService.queryOrderTotalAmount(date);   //日交易额
         //结果数据集合
-        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>(){{
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>() {{
+            add(new HashMap<>());
             add(new HashMap<>());
             add(new HashMap<>());
         }};
         //数据1
         Map<String, Object> map1 = list.get(0);
-            map1.put("id","dau");
-            map1.put("name","新增日活");
-            map1.put("value",totalCount);
+        map1.put("id", "dau");
+        map1.put("name", "新增日活");
+        map1.put("value", totalCount);
         //数据2
         Map<String, Object> map2 = list.get(1);
-            map2.put("id","dau");
-            map2.put("name","新增用户");
-            map2.put("value",233);
+        map2.put("id", "dau");
+        map2.put("name", "新增用户");
+        map2.put("value", 233);
+
+        Map<String, Object> map3 = list.get(2);
+
+        map3.put("id","order_amount");
+        map3.put("name","新增交易额");
+        map3.put("value",amount);
         return list.toString();
     }
 
     @RequestMapping("/realtime-hours")
-    public String getDauTotalHourMap(String id,String date){
-        Map<String,Map<String,Long>> resMap = new HashMap<>();
-        if ("dau".equals(id)){
+    public String getDauTotalHourMap(String id, String date) {
+        Map<String, Map<String, Object>> resMap = new HashMap<>();
+        String yesdayDate = LocalDate.parse(date).plusDays(-1).toString();
+        Map today = null;
+        Map yesday = null;
+        if ("dau".equals(id)) {
             //今天数据
-            Map today = publisherService.getDauTotalHourMap(date);
-            String yesdayDate = LocalDate.parse(date).plusDays(-1).toString();
-            Map yesday = publisherService.getDauTotalHourMap(yesdayDate);
+            today = publisherService.getDauTotalHourMap(date);
 
-            Map<String, Long> yesterdayMap = resMap.get("yesterday");
-            Map<String, Long> todayMap = resMap.get("today");
-            if (yesterdayMap == null && todayMap == null){
-                todayMap = today;
-                yesterdayMap = yesday;
-                resMap.put("yesterday",yesterdayMap);
-                resMap.put("today",todayMap);
-            }
+            yesday = publisherService.getDauTotalHourMap(yesdayDate);
 
-        }else if ("new_mid".equals(id)){
-
+        } else if ("new_mid".equals(id)) {
+            System.out.println("hello world");
+        } else if ("order_amount".equals(id)) {
+            today = publisherService.queryOrderAmountHourMap(date);
+            yesday = publisherService.queryOrderAmountHourMap(yesdayDate);
         }
+
+        Map yesterdayMap = resMap.get("yesterday");
+        Map todayMap = resMap.get("today");
+        if (yesterdayMap == null && todayMap == null) {
+            todayMap = today;
+            yesterdayMap = yesday;
+        }
+        resMap.put("yesterday", yesterdayMap);
+        resMap.put("today", todayMap);
         return resMap.toString();
     }
 }
